@@ -4,7 +4,7 @@ import { TiposRepo } from "../repositories/tipos.repo";
 export const SubtiposService = {
    list() {
     return SubtiposRepo.list();
-  },
+  }, 
   
   async findDeep(id: number) {
     const subtipo = await SubtiposRepo.findDeepById(id);

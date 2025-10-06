@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
+
 async function main() {
-      // limpa dados (apenas para desenvolvimento)
+  // limpa dados (apenas para desenvolvimento)
   await prisma.subtipoBarreira.deleteMany();
   await prisma.barreiraAcessibilidade.deleteMany();
   await prisma.acessibilidade.deleteMany();
@@ -9,7 +10,7 @@ async function main() {
   await prisma.subtipoDeficiencia.deleteMany();
   await prisma.tipoDeficiencia.deleteMany();
 
-    // Tipos
+  // Tipos
   const motora = await prisma.tipoDeficiencia.create({
     data: { nome: "Deficiência Motora" },
   });
@@ -20,7 +21,7 @@ async function main() {
     data: { nome: "Deficiência Visual" },
   });
 
-    // Subtipos
+  // Subtipos
   const sub_motora1 = await prisma.subtipoDeficiencia.create({
     data: { nome: "Amputação MIE com muleta", tipoId: motora.id },
   });
@@ -43,7 +44,7 @@ async function main() {
       prisma.barreira.create({ data: { descricao: "Falta de sinalização tátil" } }),
     ]);
 
-    // Acessibilidades
+  // Acessibilidades
   const [rampa, pisoAntid, elevador, interprete, chatInterno, altoContraste, pisoGuia] =
     await prisma.$transaction([
       prisma.acessibilidade.create({ data: { descricao: "Rampa com inclinação adequada" } }),
@@ -55,14 +56,16 @@ async function main() {
       prisma.acessibilidade.create({ data: { descricao: "Piso guia / sinalização tátil" } }),
     ]);
 
-      // Subtipo ↔ Barreiras (N:N)
+  // Subtipo ↔ Barreiras (N:N)
   await prisma.subtipoBarreira.createMany({
     data: [
       { subtipoId: sub_motora1.id, barreiraId: escadas.id },
       { subtipoId: sub_motora1.id, barreiraId: degrausAltos.id },
       { subtipoId: sub_motora1.id, barreiraId: pisoIrregular.id },
+
       { subtipoId: sub_auditiva1.id, barreiraId: comunicacaoOral.id },
       { subtipoId: sub_auditiva1.id, barreiraId: faltaInterprete.id },
+
       { subtipoId: sub_visual1.id, barreiraId: pisoIrregular.id },
       { subtipoId: sub_visual1.id, barreiraId: faltaContraste.id },
       { subtipoId: sub_visual1.id, barreiraId: faltaSinalizacaoTatil.id },
@@ -70,7 +73,7 @@ async function main() {
     skipDuplicates: true,
   });
 
-    // Barreira ↔ Acessibilidade (N:N)
+  // Barreira ↔ Acessibilidade (N:N)
   await prisma.barreiraAcessibilidade.createMany({
     data: [
       // Motora
@@ -79,9 +82,11 @@ async function main() {
       { barreiraId: degrausAltos.id, acessibilidadeId: rampa.id },
       { barreiraId: degrausAltos.id, acessibilidadeId: elevador.id },
       { barreiraId: pisoIrregular.id, acessibilidadeId: pisoAntid.id },
+
       // Auditiva
       { barreiraId: faltaInterprete.id, acessibilidadeId: interprete.id },
       { barreiraId: comunicacaoOral.id, acessibilidadeId: chatInterno.id },
+
       // Visual
       { barreiraId: faltaContraste.id, acessibilidadeId: altoContraste.id },
       { barreiraId: faltaSinalizacaoTatil.id, acessibilidadeId: pisoGuia.id },
