@@ -18,7 +18,7 @@ export default function SubtipoForm({ onCreated }: Props) {
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault(); // não vai recarregar o formulário
+    e.preventDefault();
     setErro(null);
 
     const trimmed = nome.trim();
