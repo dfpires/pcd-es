@@ -11,6 +11,7 @@ export const CandidatoSubtiposController = {
   async vincular(req: Request, res: Response) {
     const candidatoId = Number(req.params.id);
     const { subtipoIds } = req.body as { subtipoIds: number[] };
+    console.log(subtipoIds)
     const data = await CandidatoSubtiposService.vincular(candidatoId, subtipoIds);
     res.json(data);
   },

@@ -8,7 +8,9 @@ export const CandidatoSubtiposService = {
 
   async vincular(candidatoId: number, subtipoIds: number[]) {
     const candidato = await CandidatosRepo.findById(candidatoId);
+    console.log(candidato)
     if (!candidato) throw new Error("Candidato não encontrado");
+    console.log(subtipoIds)
     if (!subtipoIds.length)
       throw new Error("É necessário informar pelo menos um subtipo");
     await CandidatoSubtiposRepo.create(candidatoId, subtipoIds);
